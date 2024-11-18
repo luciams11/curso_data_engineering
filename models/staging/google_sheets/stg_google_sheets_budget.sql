@@ -12,11 +12,11 @@ WITH src_budget AS (
 
 renamed_casted AS (
     SELECT
-          _row
-        , product_id
-        , quantity
-        , month 
-        , _fivetran_synced AS date_load
+        _row,
+        product_id,
+        quantity,
+        month,
+        _fivetran_synced AS date_load
     FROM src_budget
     )
 
