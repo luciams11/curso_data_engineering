@@ -6,12 +6,11 @@ WITH src_users AS (
 renamed_casted AS (
     SELECT
         user_id,
-        updated_at,
+        convert_timezone('UTC', updated_at) as updated_at_UTC,
         address_id,
         last_name,
-        created_at,
+        convert_timezone('UTC', created_at) as created_at_UTC,
         replace(phone_number,'-','')::number as phone_number,
-        total_orders,
         first_name,
         email,
         _fivetran_deleted,

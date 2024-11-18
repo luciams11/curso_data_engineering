@@ -6,9 +6,9 @@ WITH src_promos AS (
 renamed_casted AS (
     SELECT
         {{dbt_utils.generate_surrogate_key(['promo_id'])}} as promo_id,
-        promo_id as promo_name,
-        discount as discount_in_euros,
-        status,
+        lower(promo_id) as promo_name,
+        discount as discount_euros,
+        status as promo_status,
         _fivetran_deleted,
         _fivetran_synced AS date_load
     FROM src_promos
@@ -16,11 +16,11 @@ renamed_casted AS (
     UNION ALL
 
     SELECT 
-        {{dbt_utils.generate_surrogate_key(['no promo'])}} as promo_id,
+        {{dbt_utils.generate_surrogate_key(['9999'])}} as promo_id,
         'no promo' as promo_name,
         0 as discount_in_euros,
-        'inactive' as status,
-        FALSE as _fivetran_deleted,
+        'active' as status,
+        NULL as _fivetran_deleted,
         CURRENT_TIMESTAMP AS date_load
 
     )

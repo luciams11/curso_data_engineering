@@ -1,4 +1,4 @@
-WITH src_product AS (
+WITH src_products AS (
     SELECT * 
     FROM {{ source('sql_server_dbo', 'products') }}
     ),
@@ -6,7 +6,7 @@ WITH src_product AS (
 renamed_casted AS (
     SELECT
         product_id,
-        price as product_price,
+        price::decimal(10,2) as product_price,
         name as product_name,
         inventory as stock,
         _fivetran_deleted,
