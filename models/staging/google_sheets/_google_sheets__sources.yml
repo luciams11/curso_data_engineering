@@ -23,5 +23,6 @@ sources:
           - name: _row
           - name: product_id
           - name: quantity
+          ## test positivo?
           - name: month
           - name: _fivetran_synced
