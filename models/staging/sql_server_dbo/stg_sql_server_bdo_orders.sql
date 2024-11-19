@@ -6,11 +6,11 @@ WITH src_orders AS (
 renamed_casted AS (
     SELECT
         order_id,
-        shipping_id, -- Hay que hacer join con shipping_service
+        shipping_service, -- Hay que hacer join con shipping_service
         shipping_cost::decimal(10,2) as shipping_cost_euros,
         address_id,
         convert_timezone('UTC', created_at) as created_at_UTC,
-        {{dbt_utils.generate_surrogate_key(['promo_id'])}} as promo_id,
+        {{ dbt_utils.generate_surrogate_key(["COALESCE(NULLIF(promo_id, ''), '9999')"]) }} as promo_id, 
         convert_timezone('UTC', estimated_delivery_at) as estimated_delivery_at_UTC,
         order_cost::decimal(10,2) as order_cost_euros,
         user_id,
