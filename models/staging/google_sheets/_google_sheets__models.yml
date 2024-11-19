@@ -20,7 +20,7 @@ models:
         description: ""
         tests:
           - relationships:
-              to: ref('products')
+              to: ref('stg_sql_server_dbo_products')
               field: product_id
 
 

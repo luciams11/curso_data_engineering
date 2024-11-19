@@ -1,11 +1,6 @@
 WITH src_orders AS (
     SELECT * 
-    FROM {{ ref("base_sql_server_dbo_orders") }}
-    ),
-
-    src_order_items AS(
-    SELECT * 
-    FROM {{ ref("stg_sql_server_dbo_order_items") }}
+    FROM {{ source('sql_server_dbo', 'orders') }}
     ),
 
 renamed_casted AS (
@@ -28,9 +23,7 @@ renamed_casted AS (
         status as order_status,
         _fivetran_deleted,
         convert_timezone('UTC',_fivetran_synced) AS date_load_UTC
-    FROM src_orders o 
-
-
+    FROM src_orders
     )
 
 SELECT * FROM renamed_casted

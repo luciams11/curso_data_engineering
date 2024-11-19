@@ -1,15 +1,15 @@
 WITH date_spine AS(
     {{ dbt_utils.date_spine(
             datepart="day",
-            start_date="cast('2020-01-01' as date)",
-            end_date="cast('2022-01-01' as date)"
+            start_date="cast('2020-01-01' as timestamp)",
+            end_date="cast('2022-01-01' as timestamp)"
         )
     }} 
 ),
 
 time_dimension AS(
     SELECT
-        date_day,
+        date_day as date_id,
         YEAR(date_day) AS year,
         MONTH(date_day) AS month,
         DAY(date_day) AS day,
