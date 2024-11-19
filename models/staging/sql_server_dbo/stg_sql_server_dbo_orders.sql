@@ -6,11 +6,11 @@ WITH src_orders AS (
 renamed_casted AS (
     SELECT
         order_id,
-        shipping_service, -- Hay que hacer join con shipping_service
+        {{ dbt_utils.generate_surrogate_key(["COALESCE(NULLIF(shipping_service, ''), 'sin asignar')"]) }} as shipping_service_id, 
         shipping_cost::decimal(10,2) as shipping_cost_euros,
         address_id,
         convert_timezone('UTC', created_at) as created_at_UTC,
-        {{ dbt_utils.generate_surrogate_key(["COALESCE(NULLIF(promo_id, ''), '9999')"]) }} as promo_id, 
+        {{ dbt_utils.generate_surrogate_key(["COALESCE(NULLIF(promo_id, ''), 'no promo')"]) }} as promo_id, 
         convert_timezone('UTC', estimated_delivery_at) as estimated_delivery_at_UTC,
         order_cost::decimal(10,2) as order_cost_euros,
         user_id,
@@ -22,7 +22,7 @@ renamed_casted AS (
         END AS tracking_id,
         status as order_status,
         _fivetran_deleted,
-        _fivetran_synced AS date_load
+        convert_timezone('UTC',_fivetran_synced) AS date_load_UTC
     FROM src_orders
     )
 

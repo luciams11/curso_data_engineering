@@ -14,7 +14,7 @@ renamed_casted AS (
         first_name,
         email,
         _fivetran_deleted,
-        _fivetran_synced AS date_load
+        convert_timezone('UTC',_fivetran_synced) AS date_load_UTC
     FROM src_users
     )
 

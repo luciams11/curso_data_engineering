@@ -11,7 +11,7 @@ renamed_casted AS (
         address,
         state,
         _fivetran_deleted,
-        _fivetran_synced AS date_load
+        convert_timezone('UTC',_fivetran_synced) AS date_load_UTC
     FROM src_addresses
     )
 

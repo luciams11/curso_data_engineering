@@ -10,18 +10,18 @@ renamed_casted AS (
         discount as discount_euros,
         status as promo_status,
         _fivetran_deleted,
-        _fivetran_synced AS date_load
+        convert_timezone('UTC',_fivetran_synced) AS date_load_UTC
     FROM src_promos
 
     UNION ALL
 
     SELECT 
-        {{dbt_utils.generate_surrogate_key(['9999'])}} as promo_id,
+        {{dbt_utils.generate_surrogate_key(["'no promo'"])}} as promo_id,
         'no promo' as promo_name,
         0 as discount_in_euros,
         'active' as status,
         NULL as _fivetran_deleted,
-        CURRENT_TIMESTAMP AS date_load
+        convert_timezone('UTC', CURRENT_TIMESTAMP) AS date_load_UTC
 
     )
 

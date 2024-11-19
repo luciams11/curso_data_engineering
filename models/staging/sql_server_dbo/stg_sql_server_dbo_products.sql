@@ -10,7 +10,7 @@ renamed_casted AS (
         name as product_name,
         inventory as stock,
         _fivetran_deleted,
-        _fivetran_synced AS date_load
+        convert_timezone('UTC',_fivetran_synced) AS date_load_UTC
     FROM src_products
     )
 

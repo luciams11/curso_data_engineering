@@ -16,7 +16,7 @@ renamed_casted AS (
         month,
         product_id,
         quantity,
-        _fivetran_synced AS date_load
+        convert_timezone('UTC',_fivetran_synced) AS date_load_UTC
     FROM src_budget
     )
 
