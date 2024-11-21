@@ -40,14 +40,20 @@ models:
     # Applies to all files under models/example/
     example:
       +materialized: table
-    
+      
     staging:
       +materialized: view
-    
+      +database: "{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_DB"
+      google_sheets:
+        +schema: google_sheets
+      sql_server_dbo:
+        +schema: sql_server_dbo
+      
     marts:
-      +database: "ALUMNO13_DEV_GOLD_DB"
-      +schema: "ALUMNO13"
       +materialized: table
+      +database: "{{ env_var('DBT_ENVIRONMENTS') }}_GOLD_DB"
+      core:
+        +schema: core
 
 seeds:
   +database: "ALUMNO13_DEV_BRONZE_DB"
