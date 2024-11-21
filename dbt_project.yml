@@ -42,8 +42,6 @@ models:
       +materialized: table
     
     staging:
-      +database: "ALUMNO13_DEV_SILVER_DB"
-      +schema: "ALUMNO13"
       +materialized: view
     
     marts:
