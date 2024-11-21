@@ -6,7 +6,8 @@ WITH src_orders AS (
 renamed_casted AS (
     SELECT
         order_id,
-        {{ dbt_utils.generate_surrogate_key(["COALESCE(NULLIF(shipping_service, ''), 'sin asignar')"]) }} as shipping_service_id, 
+        {{ dbt_utils.generate_surrogate_key(["COALESCE(NULLIF(shipping_service, ''), 'sin asignar')"]) }} as shipment_id, 
+        COALESCE(NULLIF(shipping_service, ''), 'sin asignar') as shipping_service,
         shipping_cost::decimal(10,2) as shipping_cost_euros,
         address_id,
         convert_timezone('UTC', created_at) as created_at_UTC,
@@ -20,6 +21,7 @@ renamed_casted AS (
             WHEN TRIM(tracking_id) = '' THEN null
             ELSE tracking_id
         END AS tracking_id,
+        {{ dbt_utils.generate_surrogate_key(["status"]) }} as status_id, 
         status as order_status,
         _fivetran_deleted,
         convert_timezone('UTC',_fivetran_synced) AS date_load_UTC

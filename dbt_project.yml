@@ -40,6 +40,16 @@ models:
     # Applies to all files under models/example/
     example:
       +materialized: table
+    
+    staging:
+      +database: "ALUMNO13_DEV_SILVER_DB"
+      +schema: "ALUMNO13"
+      +materialized: view
+    
+    marts:
+      +database: "ALUMNO13_DEV_GOLD_DB"
+      +schema: "ALUMNO13"
+      +materialized: table
 
 seeds:
   +database: "ALUMNO13_DEV_BRONZE_DB"
