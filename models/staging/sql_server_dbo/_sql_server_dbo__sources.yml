@@ -21,35 +21,58 @@ sources:
         loaded_at_field: _fivetran_synced
         columns:
           - name: address_id
+            description: "Identificador único de la dirección"
           - name: zipcode
+            description: "Código postal asociado a una dirección"
           - name: country
+            description: "País de una dirección"
           - name: address
+            description: "Número y nombre de la vía"
           - name: state
+            description: "Estado"
           - name: _fivetran_deleted
+            description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
           - name: _fivetran_synced
+            description: "Fecha y hora de carga desde Fivetran"
+
 
       - name: events
         loaded_at_field: _fivetran_synced
         columns:
           - name: event_id
+            description: "Identificador único del evento"
           - name: page_url
+            description: "URL donde se ha producido el evento"
           - name: event_type
+            description: '{{ doc("event_types") }}'
           - name: user_id
+            description: "Identificador del usuario que ha generado el evento"
           - name: product_id
+            description: "Identificado del producto que se ha visto o se ha añadido al carrito. Puede ser nulo."
           - name: session_id
+            description: "Identificador de la sesión en la que se ha generado el evento"
           - name: created_at
+            description: "Fecha y hora a la que se ha producido el evento"
           - name: order_id
+            description: "Identificador del pedido que se ha generado al enviar el prducto y realizar el pago. Puede ser nulo"
           - name: _fivetran_deleted
+            description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
           - name: _fivetran_synced
+            description: "Fecha y hora de carga desde Fivetran"
 
       - name: orders
         loaded_at_field: _fivetran_synced
         columns:
           - name: order_id
+            description: "Identificador único del pedido"
           - name: shipping_service
+            description: "Nombre del servicio de mensajería que envía el pedido"
           - name: shipping_cost
+            description: "Gastos de envío del pedido"
           - name: address_id
+            description: "Identificador de la dirección del pedido"
           - name: created_at
+            description: ""
           - name: promo_id
           - name: estimated_delivery_at
           - name: order_cost

@@ -21,8 +21,13 @@ sources:
         loaded_at_field: _fivetran_synced
         columns:
           - name: _row
+            description: "Número de fila asignado por Google Sheets"
           - name: product_id
+            description: "Identificador del producto al que corresponde el presupuesto"
           - name: quantity
+            description: "Cantidad presupuestada a un determinado producto"
           ## test positivo?
           - name: month
+            description: "Fecha del presupuesto"
           - name: _fivetran_synced
+            description: "Fecha y hora de carga desde Fivetran"

@@ -17,6 +17,7 @@ renamed_casted AS (
         user_id,
         order_total::decimal(10,2) as order_total_euros,
         convert_timezone('UTC', delivered_at) as delivered_at_UTC,
+        -- Comentar esto
         CASE 
             WHEN TRIM(tracking_id) = '' THEN null
             ELSE tracking_id
