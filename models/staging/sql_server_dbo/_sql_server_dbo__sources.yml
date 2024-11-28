@@ -1,0 +1,178 @@
+version: 2
+
+sources:
+
+  - name: sql_server_dbo # name of the source 
+    schema: sql_server_dbo # this is the schema our raw data lives in
+    database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_DB"  # this is the name of our database
+    
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+
+    freshness:
+      warn_after: {count: 20, period: day}
+      error_after: {count: 30, period: day}
+
+    tables:
+
+      - name: addresses
+        description: Tabla con las direcciones asociadas a usuarios o envíos
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: address_id
+            tests:
+              - unique
+              - not_null
+            description: "Identificador único de la dirección"
+          - name: zipcode
+            description: "Código postal asociado a la dirección"
+          - name: country
+            description: "País al que pertenece la dirección"
+          - name: address
+            description: "Número y nombre de la vía"
+          - name: state
+            description: "Estado al que pertenece la dirección"
+          - name: _fivetran_deleted
+            description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+          - name: _fivetran_synced
+            description: "Fecha y hora de carga desde Fivetran"
+
+
+      - name: events
+        description: Tabla que recoge los eventos realizados en la página web, desde visitar páginas de productos hasta completar el pedido
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: event_id
+            tests:
+              - unique
+              - not_null
+            description: "Identificador único del evento"
+          - name: page_url
+            description: "URL donde se ha producido el evento"
+          - name: event_type
+            description: '{{ doc("event_types") }}'
+          - name: user_id
+            description: "Identificador del usuario que ha generado el evento"
+          - name: product_id
+            description: "Identificado del producto que se ha visto o se ha añadido al carrito. Puede ser nulo."
+          - name: session_id
+            description: "Identificador de la sesión en la que se ha generado el evento"
+          - name: created_at
+            description: "Fecha y hora a la que se ha producido el evento"
+          - name: order_id
+            description: "Identificador del pedido que se ha generado al enviar el prducto y realizar el pago. Puede ser nulo"
+          - name: _fivetran_deleted
+            description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+          - name: _fivetran_synced
+            description: "Fecha y hora de carga desde Fivetran"
+
+      - name: orders
+        description: Tabla que recoge la información de la cabecera asociada a un pedido
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: order_id
+            description: "Identificador único del pedido"
+          - name: shipping_service
+            description: "Nombre del servicio de mensajería que envía el pedido"
+          - name: shipping_cost
+            description: "Gastos de envío del pedido"
+          - name: address_id
+            description: "Identificador de la dirección del pedido"
+          - name: created_at
+            description: "Fecha y hora del momento en el que se crea el pedido"
+          - name: promo_id
+            description: "Identificador de la promoción que se aplica al pedido"
+          - name: estimated_delivery_at
+            description: "Fecha y hora estimada de entrega del pedido"
+          - name: order_cost
+            description: "Coste del pedido sin incluir gastos de envío"
+          - name: user_id
+            description: "Identificador del usuario que ha hecho el pedido"
+          - name: order_total
+            description: "Coste total del pedido incluyendo los gastos de envío"
+          - name: delivered_at
+            description: "Fecha y hora en la que el pedido fue entregado"
+          - name: tracking_id
+            description: "Identificador para el seguimiento del envío del pedido"
+          - name: status
+            description: '{{ doc("order_status") }}' 
+          - name: _fivetran_deleted
+            description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+          - name: _fivetran_synced
+            description: "Fecha y hora de carga desde Fivetran"
+
+      - name: order_items
+        description: Tabla que recoge los productos asociados a un pedido
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: order_id
+            description: "Identificador único del pedido al que corresponden los artículos"
+          - name: product_id
+            description: "Identificador único del producto"
+          - name: quantity
+            description: "Cantidad de producto pedido"
+          - name: _fivetran_deleted
+            description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+          - name: _fivetran_synced
+            description: "Fecha y hora de carga desde Fivetran"
+
+      - name: products
+        description: Tabla que recoge información de los productos
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: product_id
+            description: "Identificador único del producto"
+          - name: price
+            description: "Precio correspondiente al producto"
+          - name: name
+            description: "Nombre del producto"
+          - name: inventory
+            description: "Cantidad disponible de producto"
+          - name: _fivetran_deleted
+            description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+          - name: _fivetran_synced
+            description: "Fecha y hora de carga desde Fivetran"
+
+      - name: promos
+        description: Tabla que recoge información de las promociones
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: promo_id
+            description: "Identificador de la promoción"
+          - name: discount
+            description: "Descuento en euros correspondiente a la promoción"
+          - name: status
+            description: "Indica si la promoción está activa o no"
+          - name: _fivetran_deleted
+            description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+          - name: _fivetran_synced
+            description: "Fecha y hora de carga desde Fivetran"
+
+      - name: users
+        description: Tabla que recoge información de los usuarios registrados en la web
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: user_id
+            description: "Identificador único del usuario"
+          - name: updated_at
+            description: "Fecha y hora de la última modificación del usuario"
+          - name: address_id
+            description: "Identificador de la dirección del usuario"
+          - name: last_name
+            description: "Apellido del usuario"
+          - name: created_at
+            description: "Fecha y hora en la que se creó el usuario"
+          - name: phone_number
+            description: "Télefono de contacto del usuario"
+          - name: total_orders
+            description: "Número total de pedidos que ha realizado el usuario"
+          - name: first_name
+            description: "Nombre del usuario"
+          - name: email
+            description: "Email de contacto del usuario"
+          - name: _fivetran_deleted
+            description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+          - name: _fivetran_synced
+            description: "Fecha y hora de carga desde Fivetran"

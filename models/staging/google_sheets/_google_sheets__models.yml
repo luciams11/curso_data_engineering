@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: stg_google_sheets_budget
+    description: ""
+    columns:
+      - name: budget_id
+        data_type: varchar
+        description: ""
+        tests:
+          - unique
+          - not_null
+
+      - name: month
+        data_type: date
+        description: ""
+
+      - name: product_id
+        data_type: varchar
+        description: ""
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo_products')
+              field: product_id
+
+
+      - name: quantity
+        data_type: number
+        description: ""
+
+      - name: date_load
+        data_type: timestamp_tz
+        description: ""

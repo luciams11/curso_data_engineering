@@ -1,0 +1,160 @@
+version: 2
+
+models:
+  - name: stg_sql_server_dbo_addresses
+    description: ""
+    columns:
+      - name: address_id
+        data_type: varchar
+        description: ""
+        tests:
+          - unique
+          - not_null
+
+      - name: zipcode
+        data_type: number
+        description: ""
+
+      - name: country
+        data_type: varchar
+        description: ""
+
+      - name: address
+        data_type: varchar
+        description: ""
+
+      - name: state
+        data_type: varchar
+        description: ""
+
+      - name: _fivetran_deleted
+        data_type: boolean
+        description: ""
+
+      - name: date_load_utc
+        data_type: timestamp_tz
+        description: ""
+  
+  - name: stg_sql_server_dbo_products
+    description: ""
+    columns:
+      - name: product_id
+        data_type: varchar
+        description: ""
+        tests:
+          - unique
+          - not_null
+
+      - name: product_price
+        data_type: number
+        description: ""
+
+      - name: product_name
+        data_type: varchar
+        description: ""
+
+      - name: stock
+        data_type: number
+        description: ""
+
+      - name: _fivetran_deleted
+        data_type: boolean
+        description: ""
+
+      - name: date_load_utc
+        data_type: timestamp_tz
+        description: ""
+
+  - name: stg_sql_server_dbo_promos
+    description: ""
+    columns:
+      - name: promo_id
+        data_type: varchar
+        description: ""
+        tests:
+          - unique
+          - not_null
+
+      - name: promo_name
+        data_type: varchar
+        description: ""
+
+      - name: discount_euros
+        data_type: number
+        description: ""
+
+      - name: promo_status
+        data_type: varchar
+        description: ""
+
+      - name: _fivetran_deleted
+        data_type: boolean
+        description: ""
+
+      - name: date_load_utc
+        data_type: timestamp_tz
+        description: ""
+  
+  - name: stg_sql_server_dbo_shipping_service
+    description: ""
+    columns:
+      - name: shipping_service_id
+        data_type: varchar
+        description: ""
+        tests:
+          - unique
+          - not_null
+
+      - name: shipping_service
+        data_type: varchar
+        description: ""
+  
+  - name: stg_sql_server_dbo_users
+    description: ""
+    columns:
+      - name: user_id
+        data_type: varchar
+        description: ""
+        tests:
+          - unique
+          - not_null
+
+      - name: updated_at_utc
+        data_type: timestamp_tz
+        description: ""
+
+      - name: address_id
+        data_type: varchar
+        description: ""
+        tests:
+          - relationships:
+              field: address_id
+              to: ref('stg_sql_server_dbo_addresses')
+
+      - name: last_name
+        data_type: varchar
+        description: ""
+
+      - name: created_at_utc
+        data_type: timestamp_tz
+        description: ""
+
+      - name: phone_number
+        data_type: number
+        description: ""
+
+      - name: first_name
+        data_type: varchar
+        description: ""
+
+      - name: email
+        data_type: varchar
+        description: ""
+
+      - name: _fivetran_deleted
+        data_type: boolean
+        description: ""
+
+      - name: date_load_utc
+        data_type: timestamp_tz
+        description: ""

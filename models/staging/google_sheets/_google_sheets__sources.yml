@@ -1,0 +1,34 @@
+version: 2
+
+sources:
+
+  - name: google_sheets # name of the source 
+    schema: google_sheets # this is the schema our raw data lives in
+    database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_DB"  # this is the name of our database
+    
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+
+    freshness:
+      warn_after: {count: 10, period: day}
+      error_after: {count: 20, period: day}
+
+    tables:
+
+      - name: budget
+        description: Tabla que recoge el presupuesto asociado a un producto un mes determinado
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: _row
+            description: "Número de fila asignado por Google Sheets"
+          - name: product_id
+            description: "Identificador del producto al que corresponde el presupuesto"
+          - name: quantity
+            description: "Cantidad presupuestada a un determinado producto"
+          ## test positivo?
+          - name: month
+            description: "Fecha del presupuesto"
+          - name: _fivetran_synced
+            description: "Fecha y hora de carga desde Fivetran"
