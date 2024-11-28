@@ -1,28 +1,27 @@
-WITH src_promos AS (
+WITH base_promos AS (
     SELECT * 
-    FROM {{ source('sql_server_dbo', 'promos') }}
+    FROM {{ ref('base_sql_server_dbo_promos') }}
     ),
 
-renamed_casted AS (
+add_promo AS (
     SELECT
-        {{dbt_utils.generate_surrogate_key(['promo_id'])}} as promo_id,
-        lower(promo_id) as promo_name,
-        discount as discount_euros,
-        status as promo_status,
-        _fivetran_deleted,
-        convert_timezone('UTC',_fivetran_synced) AS date_load_UTC
-    FROM src_promos
+        promo_id,
+        promo_name,
+        discount_usd,
+        promo_status,
+        is_deleted,
+        date_load_UTC
+    FROM base_promos
 
     UNION ALL
 
     SELECT 
         {{dbt_utils.generate_surrogate_key(["'no promo'"])}} as promo_id,
         'no promo' as promo_name,
-        0 as discount_in_euros,
-        'active' as status,
-        NULL as _fivetran_deleted,
+        0 as discount_usd,
+        'active' as promo_status,
+        false as is_deleted,
         convert_timezone('UTC', CURRENT_TIMESTAMP) AS date_load_UTC
-
     )
 
-SELECT * FROM renamed_casted
+SELECT * FROM add_promo

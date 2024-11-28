@@ -13,7 +13,10 @@ renamed_casted AS (
         session_id,
         convert_timezone('UTC', created_at) as created_at_UTC,
         order_id,
-        _fivetran_deleted,
+        CASE
+            WHEN _fivetran_deleted = null THEN false
+            ELSE true
+        END AS is_deleted,
         convert_timezone('UTC',_fivetran_synced) AS date_load_UTC
     FROM src_events
     )

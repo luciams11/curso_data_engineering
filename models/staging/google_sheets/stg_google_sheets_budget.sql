@@ -15,7 +15,7 @@ renamed_casted AS (
         {{dbt_utils.generate_surrogate_key(['product_id', 'month'])}} as budget_id,
         month,
         product_id,
-        quantity,
+        quantity::number(5,0),
         convert_timezone('UTC',_fivetran_synced) AS date_load_UTC
     FROM src_budget
     )
