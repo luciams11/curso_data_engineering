@@ -18,6 +18,7 @@ sources:
     tables:
 
       - name: budget
+        description: Tabla que recoge el presupuesto asociado a un producto un mes determinado
         loaded_at_field: _fivetran_synced
         columns:
           - name: _row
