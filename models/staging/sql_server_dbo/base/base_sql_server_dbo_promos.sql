@@ -10,7 +10,7 @@ renamed_casted AS (
         discount as discount_usd,
         status as promo_status,
         CASE
-            WHEN _fivetran_deleted = null THEN false
+            WHEN _fivetran_deleted is null THEN false
             ELSE true
         END AS is_deleted,
         convert_timezone('UTC',_fivetran_synced) AS date_load_UTC

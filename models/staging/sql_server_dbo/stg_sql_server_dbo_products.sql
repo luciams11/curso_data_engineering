@@ -8,9 +8,9 @@ renamed_casted AS (
         product_id,
         price::decimal(10,2) as product_price_usd,
         name as product_name,
-        inventory::number(5,0) as stock,
+        inventory::integer as stock,
         CASE
-            WHEN _fivetran_deleted = null THEN false
+            WHEN _fivetran_deleted is null THEN false
             ELSE true
         END AS is_deleted,
         convert_timezone('UTC',_fivetran_synced) AS date_load_UTC
