@@ -6,7 +6,7 @@ Uno de los siguientes valores:
 
 | tipo           | definición                                       |
 |----------------|--------------------------------------------------|
-| checkout       | Proceso de pago iniciado por el client           |
+| checkout       | Proceso de pago iniciado por el cliente           |
 | package_shipped| Paquete enviado al cliente                       |
 | add_to_cart    | Producto añadido al carrito                      |
 | page_view      | Vista la página de un determinado producto       |
@@ -21,11 +21,9 @@ Uno de los siguientes valores:
 
 | estado         | definición                                       |
 |----------------|--------------------------------------------------|
-| placed         | Pedido realizado, aún no enviado                 |
+| preparing      | Pedido en preparación, aún no enviado            |
 | shipped        | Pedido enviado, aún no entregado                 |
-| completed      | Pedido recibido por el cliente                   |
-| return pending | El cliente solicita la devolución del artículo   |
-| returned       | El artículo ha sido devuelto                     |
+| delivered      | Pedido recibido por el cliente                   |
 
 {% enddocs %}
 

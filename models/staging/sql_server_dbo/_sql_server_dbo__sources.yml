@@ -27,6 +27,8 @@ sources:
               - not_null
             description: "Identificador único de la dirección"
           - name: zipcode
+            tests:
+              - positive_values
             description: "Código postal asociado a la dirección"
           - name: country
             description: "País al que pertenece la dirección"
@@ -54,8 +56,14 @@ sources:
           - name: event_type
             description: '{{ doc("event_types") }}'
           - name: user_id
+            tests:
+              - not_null
+              - relationships:
+                  field: user_id
+                  to: source('sql_server_dbo', 'users')
             description: "Identificador del usuario que ha generado el evento"
           - name: product_id
+          ## peta el de relationships
             description: "Identificado del producto que se ha visto o se ha añadido al carrito. Puede ser nulo."
           - name: session_id
             description: "Identificador de la sesión en la que se ha generado el evento"
@@ -73,12 +81,20 @@ sources:
         loaded_at_field: _fivetran_synced
         columns:
           - name: order_id
+            tests:
+              - unique
+              - not_null
             description: "Identificador único del pedido"
           - name: shipping_service
             description: "Nombre del servicio de mensajería que envía el pedido"
           - name: shipping_cost
             description: "Gastos de envío del pedido"
           - name: address_id
+            tests:
+              - not_null
+              - relationships:
+                  field: address_id
+                  to: source('sql_server_dbo', 'addresses')
             description: "Identificador de la dirección del pedido"
           - name: created_at
             description: "Fecha y hora del momento en el que se crea el pedido"
@@ -89,6 +105,11 @@ sources:
           - name: order_cost
             description: "Coste del pedido sin incluir gastos de envío"
           - name: user_id
+            tests:
+              - not_null
+              - relationships:
+                  field: user_id
+                  to: source('sql_server_dbo', 'users')
             description: "Identificador del usuario que ha hecho el pedido"
           - name: order_total
             description: "Coste total del pedido incluyendo los gastos de envío"
@@ -97,6 +118,9 @@ sources:
           - name: tracking_id
             description: "Identificador para el seguimiento del envío del pedido"
           - name: status
+            tests:
+              - accepted_values:
+                  values: ['delivered', 'shipped', 'preparing']
             description: '{{ doc("order_status") }}' 
           - name: _fivetran_deleted
             description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
@@ -108,10 +132,22 @@ sources:
         loaded_at_field: _fivetran_synced
         columns:
           - name: order_id
+            tests:
+              - not_null
+              - relationships:
+                  field: order_id
+                  to: source('sql_server_dbo', 'orders')
             description: "Identificador único del pedido al que corresponden los artículos"
           - name: product_id
+            tests:
+              - not_null
+              - relationships:
+                  field: product_id
+                  to: source('sql_server_dbo', 'products')
             description: "Identificador único del producto"
           - name: quantity
+            tests:
+              - positive_values
             description: "Cantidad de producto pedido"
           - name: _fivetran_deleted
             description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
@@ -123,12 +159,19 @@ sources:
         loaded_at_field: _fivetran_synced
         columns:
           - name: product_id
+            tests:
+              - unique
+              - not_null
             description: "Identificador único del producto"
           - name: price
+            tests:
+              - positive_values
             description: "Precio correspondiente al producto"
           - name: name
             description: "Nombre del producto"
           - name: inventory
+            tests:
+              - positive_values
             description: "Cantidad disponible de producto"
           - name: _fivetran_deleted
             description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
@@ -140,10 +183,18 @@ sources:
         loaded_at_field: _fivetran_synced
         columns:
           - name: promo_id
+            tests:
+              - unique
+              - not_null
             description: "Identificador de la promoción"
           - name: discount
+            tests:
+              - positive_values
             description: "Descuento en euros correspondiente a la promoción"
           - name: status
+            tests:
+              - accepted_values:
+                  values: ['active', 'inactive']
             description: "Indica si la promoción está activa o no"
           - name: _fivetran_deleted
             description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
@@ -155,10 +206,18 @@ sources:
         loaded_at_field: _fivetran_synced
         columns:
           - name: user_id
+            tests:
+              - unique
+              - not_null
             description: "Identificador único del usuario"
           - name: updated_at
             description: "Fecha y hora de la última modificación del usuario"
           - name: address_id
+            tests:
+              - not_null
+              - relationships:
+                  field: address_id
+                  to: source('sql_server_dbo', 'addresses')
             description: "Identificador de la dirección del usuario"
           - name: last_name
             description: "Apellido del usuario"
