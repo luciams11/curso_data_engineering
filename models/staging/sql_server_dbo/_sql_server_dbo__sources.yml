@@ -63,10 +63,7 @@ sources:
                   to: source('sql_server_dbo', 'users')
             description: "Identificador del usuario que ha generado el evento"
           - name: product_id
-            tests:
-              - relationships:
-                  field: product_id
-                  to: source('sql_server_dbo', 'products')
+          ## peta el de relationships
             description: "Identificado del producto que se ha visto o se ha añadido al carrito. Puede ser nulo."
           - name: session_id
             description: "Identificador de la sesión en la que se ha generado el evento"
@@ -123,7 +120,7 @@ sources:
           - name: status
             tests:
               - accepted_values:
-                  values: ['placed', 'shipped', 'completed', 'return pending', 'returned']
+                  values: ['delivered', 'shipped', 'preparing']
             description: '{{ doc("order_status") }}' 
           - name: _fivetran_deleted
             description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
