@@ -4,7 +4,18 @@ with stg_dim_tiempo AS(
 ),
 
 dim_tiempo AS(
-    SELECT *
+    SELECT 
+        date_id,
+        year,
+        month,
+        day,
+        week_of_year,
+        quarter,
+        day_of_week,
+        is_weekend,
+        month_name,
+        day_name,
+        quarter_name
     FROM stg_tiempo
 )
 

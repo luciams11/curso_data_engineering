@@ -4,7 +4,11 @@ with stg_products AS(
 ),
 
 dim_products AS(
-    SELECT *
+    SELECT 
+        product_id,
+        product_price_usd,
+        product_name,
+        stock
     FROM stg_products
 )
 

@@ -4,7 +4,12 @@ with stg_addresses AS(
 ),
 
 dim_addresses AS(
-    SELECT *
+    SELECT 
+        address_id,
+        address,
+        state,
+        country,
+        zipcode
     FROM stg_addresses
 )
 
