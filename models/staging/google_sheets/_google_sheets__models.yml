@@ -24,7 +24,7 @@ models:
               field: product_id
 
 
-      - name: quantity
+      - name: estimated_quantity
         data_type: number
         description: ""
 

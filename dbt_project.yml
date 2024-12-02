@@ -55,6 +55,12 @@ models:
       +database: "{{ env_var('DBT_ENVIRONMENTS') }}_GOLD_DB"
       core:
         +schema: core
+      intermediate:
+        +schema: intermediate
+      marketing:
+        +schema: marketing
+      product:
+        +schema: product
 
 seeds:
   +database: "ALUMNO13_DEV_BRONZE_DB"

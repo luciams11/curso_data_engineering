@@ -9,7 +9,7 @@ dim_promos AS(
         promo_name,
         discount_usd,
         promo_status
-    FROM stg_users
+    FROM stg_promos
 )
 
 SELECT * FROM dim_promos

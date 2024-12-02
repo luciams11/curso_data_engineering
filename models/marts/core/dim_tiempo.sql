@@ -16,7 +16,7 @@ dim_tiempo AS(
         month_name,
         day_name,
         quarter_name
-    FROM stg_tiempo
+    FROM stg_dim_tiempo
 )
 
 SELECT * FROM dim_tiempo
