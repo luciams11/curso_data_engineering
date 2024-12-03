@@ -14,6 +14,7 @@ select
     product_id,
     product_price_usd,
     product_name,
+    origin_country,
     stock,
     is_deleted,
     date_load_UTC
