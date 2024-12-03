@@ -49,6 +49,8 @@ models:
         +schema: google_sheets
       sql_server_dbo:
         +schema: sql_server_dbo
+      seed_files:
+        +schema: seed_files
       
     marts:
       +materialized: table
@@ -61,6 +63,8 @@ models:
         +schema: marketing
       product:
         +schema: product
+      sales:
+        +schema: sales
 
 seeds:
   +database: "ALUMNO13_DEV_BRONZE_DB"

@@ -9,6 +9,7 @@
 with stg_orders AS(
     SELECT *
     FROM {{ref("stg_sql_server_dbo_orders")}}
+
 ),
 
 stg_order_items AS(
@@ -56,7 +57,7 @@ fct_orders AS(
 )
 
 SELECT * FROM fct_orders fct_o
---NO funciona
+
 {% if is_incremental() %}
 
 	  WHERE fct_o.date_load_UTC > (SELECT MAX(this.date_load_UTC) FROM {{ this }} as this)
