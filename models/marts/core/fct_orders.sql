@@ -56,10 +56,10 @@ fct_orders AS(
     ON oi.product_id = p.product_id
 )
 
-SELECT * FROM fct_orders fct_o
+SELECT * FROM fct_orders
 
 {% if is_incremental() %}
 
-	  WHERE fct_o.date_load_UTC > (SELECT MAX(this.date_load_UTC) FROM {{ this }} as this)
+	  WHERE date_load_UTC > (SELECT MAX(date_load_UTC) FROM {{ this }})
 
 {% endif %}
