@@ -8,6 +8,7 @@ dim_products AS(
         product_id,
         product_price_usd,
         product_name,
+        origin_country,
         stock
     FROM stg_products
 )
