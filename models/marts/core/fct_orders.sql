@@ -1,3 +1,11 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='order_item_id',
+        on_schema_change='fail'
+    )
+}}
+
 with stg_orders AS(
     SELECT *
     FROM {{ref("stg_sql_server_dbo_orders")}}
@@ -18,6 +26,7 @@ product_info AS(
 
 fct_orders AS(
     SELECT
+        oi.order_item_id,
         o.order_id, 
         o.user_id,
         o.address_id,
@@ -25,6 +34,7 @@ fct_orders AS(
         o.order_created_at_UTC,
         --o.order_cost_usd,
         --o.order_total_usd,
+        o.date_load_UTC,
  
         -- Información de envío
         o.shipping_service,
@@ -43,7 +53,12 @@ fct_orders AS(
     ON o.order_id = oi.order_id
     JOIN product_info p 
     ON oi.product_id = p.product_id
-    --where o.order_id = '40f5d51c-0a3c-481a-96e8-0784818e082d'
 )
 
-SELECT * FROM fct_orders
+SELECT * FROM fct_orders fct_o
+--NO funciona
+{% if is_incremental() %}
+
+	  WHERE fct_o.date_load_UTC > (SELECT MAX(this.date_load_UTC) FROM {{ this }} as this)
+
+{% endif %}
