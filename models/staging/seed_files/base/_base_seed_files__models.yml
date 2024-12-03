@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: base_seed_files_products_origins
+    description: ""
+    columns:
+      - name: product_name
+        data_type: varchar
+        description: ""
+
+      - name: origin_country
+        data_type: varchar
+        description: ""

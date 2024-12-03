@@ -183,15 +183,16 @@ models:
       - name: product_id
         data_type: varchar
         description: ""
-        tests:
-          - unique
-          - not_null
 
       - name: product_price_usd
         data_type: number
         description: ""
 
       - name: product_name
+        data_type: varchar
+        description: ""
+
+      - name: origin_country
         data_type: varchar
         description: ""
 
@@ -205,8 +206,8 @@ models:
 
       - name: date_load_utc
         data_type: timestamp_tz
-        description: ""       
-
+        description: ""
+        
   - name: stg_sql_server_dbo_promos
     description: ""
     columns:

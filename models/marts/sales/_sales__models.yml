@@ -1,0 +1,72 @@
+version: 2
+
+models:
+  - name: agg_sales_per_month
+    description: ""
+    columns:
+      - name: product_id
+        data_type: varchar
+        description: ""
+
+      - name: product_name
+        data_type: varchar
+        description: ""
+
+      - name: total_quantity_product
+        data_type: number
+        description: ""
+
+      - name: real_profit_usd
+        data_type: number
+        description: ""
+
+      - name: month
+        data_type: number
+        description: ""
+
+      - name: year
+        data_type: number
+        description: ""
+
+  - name: budget_vs_sales
+    description: ""
+    columns:
+      - name: product_id
+        data_type: varchar
+        description: ""
+
+      - name: month
+        data_type: varchar
+        description: ""
+
+      - name: year
+        data_type: number
+        description: ""
+
+      - name: estimated_quantity
+        data_type: number
+        description: ""
+
+      - name: estimated_profit_usd
+        data_type: number
+        description: ""
+
+      - name: total_quantity_product_sold
+        data_type: number
+        description: ""
+
+      - name: real_profit_usd
+        data_type: number
+        description: ""
+
+      - name: budget_achieved
+        data_type: boolean
+        description: ""
+
+      - name: quantity_diff
+        data_type: number
+        description: ""
+
+      - name: profit_diff
+        data_type: number
+        description: ""

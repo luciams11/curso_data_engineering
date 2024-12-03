@@ -63,7 +63,6 @@ sources:
                   to: source('sql_server_dbo', 'users')
             description: "Identificador del usuario que ha generado el evento"
           - name: product_id
-          ## peta el de relationships
             description: "Identificado del producto que se ha visto o se ha añadido al carrito. Puede ser nulo."
           - name: session_id
             description: "Identificador de la sesión en la que se ha generado el evento"
