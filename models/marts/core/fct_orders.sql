@@ -11,6 +11,7 @@ stg_order_items AS(
 product_info AS(
     SELECT 
         product_id,
+        product_name,
         product_price_usd
     FROM {{ ref('dim_products') }}
 ),
@@ -34,6 +35,7 @@ fct_orders AS(
         o.order_status,
 
         oi.product_id,
+        p.product_name,
         oi.quantity,
         p.product_price_usd
     FROM stg_orders o
