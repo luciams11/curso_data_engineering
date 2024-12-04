@@ -1,4 +1,4 @@
-{% snapshot stg_products_snapshot %}
+{% snapshot products_snapshot %}
 
 {{
     config(
@@ -18,6 +18,6 @@ select
     stock,
     is_deleted,
     date_load_UTC
-from {{ ref('stg_sql_server_dbo_products') }}
+from {{ source('sql_server_dbo', 'products') }}
 
 {% endsnapshot %}

@@ -17,14 +17,6 @@ stg_order_items AS(
     FROM {{ ref('stg_sql_server_dbo_order_items') }}
 ),
 
-product_info AS(
-    SELECT 
-        product_id,
-        product_name,
-        product_price_usd
-    FROM {{ ref('dim_products') }}
-),
-
 fct_orders AS(
     SELECT
         oi.order_item_id,
@@ -46,14 +38,10 @@ fct_orders AS(
         o.order_status,
 
         oi.product_id,
-        p.product_name,
-        oi.quantity,
-        p.product_price_usd
+        oi.quantity
     FROM stg_orders o
     JOIN stg_order_items oi 
     ON o.order_id = oi.order_id
-    JOIN product_info p 
-    ON oi.product_id = p.product_id
 )
 
 SELECT * FROM fct_orders

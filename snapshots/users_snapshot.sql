@@ -1,4 +1,4 @@
-{% snapshot stg_users_snapshot %}
+{% snapshot users_snapshot %}
 
 {{
     config(
@@ -21,6 +21,6 @@ select
     updated_at_UTC,
     is_deleted,
     date_load_UTC
-from {{ ref('stg_sql_server_dbo_users') }}
+from {{ source('sql_server_dbo', 'users') }}
 
 {% endsnapshot %}

@@ -65,6 +65,8 @@ models:
         +schema: product
       sales:
         +schema: sales
+      shipments:
+        +schema: shipments
 
 seeds:
   +database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_DB"
