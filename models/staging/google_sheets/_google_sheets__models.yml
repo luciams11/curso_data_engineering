@@ -2,32 +2,35 @@ version: 2
 
 models:
   - name: stg_google_sheets_budget
-    description: ""
+    description: "Modelo staging para el presupuesto asociado a un producto un mes determinado"
     columns:
       - name: budget_id
         data_type: varchar
-        description: ""
+        description: "Identificador único del presupuesto generado a partir del identificador del producto y la fecha"
         tests:
           - unique
           - not_null
 
       - name: month
         data_type: date
-        description: ""
+        description: "Fecha del presupuesto"
+        tests:
+              - not_null
 
       - name: product_id
         data_type: varchar
-        description: ""
+        description: "Identificador del producto al que corresponde el presupuesto"
         tests:
           - relationships:
               to: ref('stg_sql_server_dbo_products')
               field: product_id
 
-
       - name: estimated_quantity
         data_type: number
-        description: ""
+        description: "Cantidad presupuestada a un determinado producto en un mes concreto"
+        tests:
+          - positive_values
 
-      - name: date_load
+      - name: date_load_utc
         data_type: timestamp_tz
-        description: ""
+        description: "Fecha y hora de carga desde Fivetran en UTC"

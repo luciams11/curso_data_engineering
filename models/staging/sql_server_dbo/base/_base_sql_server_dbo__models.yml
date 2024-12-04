@@ -1,54 +1,73 @@
 models:
   - name: base_sql_server_dbo_products
-    description: ""
+    description: "Modelo base para productos disponibles en la tienda"
     columns:
       - name: product_id
         data_type: varchar
-        description: ""
+        description: "Identificador único del producto"
+        tests:
+          - unique
+          - not_null
 
       - name: product_price_usd
         data_type: number
-        description: ""
+        description: "Precio del producto en dólares estadounidenses (USD)"
+        tests:
+          - positive_values
 
       - name: product_name
         data_type: varchar
-        description: ""
+        description: "Nombre del producto"
 
       - name: stock
         data_type: number
-        description: ""
+        description: "Cantidad de productos disponibles en el inventario"
+        tests:
+          - positive_values
 
       - name: is_deleted
         data_type: boolean
-        description: ""
+        description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+        tests:
+          - accepted_values:
+              values: [true, false]
 
       - name: date_load_utc
         data_type: timestamp_tz
-        description: ""
+        description: "Fecha y hora de carga desde Fivetran en UTC"
         
   - name: base_sql_server_dbo_promos
-    description: ""
+    description: "Modelo base para las promociones aplicables en la tienda"
     columns:
       - name: promo_id
         data_type: varchar
-        description: ""
+        description: "Identificador único de la promoción"
+        tests:
+          - unique
+          - not_null
 
       - name: promo_name
         data_type: varchar
-        description: ""
+        description: "Nombre de la promoción"
 
       - name: discount_usd
         data_type: number
-        description: ""
+        description: "Descuento en dólares estadounidenses (USD) correspondiente a la promoción"
 
       - name: promo_status
         data_type: varchar
-        description: ""
+        description: "Indica si la promoción está activa"
+        tests:
+          - accepted_values:
+              values: ['active', 'inactive']
 
       - name: is_deleted
         data_type: boolean
-        description: ""
+        description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+        tests:
+          - accepted_values:
+              values: [true, false]
 
       - name: date_load_utc
         data_type: timestamp_tz
-        description: ""
+        description: "Fecha y hora de carga desde Fivetran en UTC"

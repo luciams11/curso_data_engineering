@@ -31,8 +31,7 @@ users_orders AS (
         sum(o.shipping_cost_per_product_usd) as total_shipping_cost_usd,
         sum(p.discount_usd) as total_discount_usd,
         sum(o.quantity) as total_quantity_product,
-        count(distinct o.product_id) as total_dif_product,
-        o.date_load_UTC
+        count(distinct o.product_id) as total_dif_product
     FROM users_info u
     LEFT JOIN fct_orders o
     ON u.user_id = o.user_id
