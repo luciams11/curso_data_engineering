@@ -10,12 +10,6 @@
 WITH src_order_items AS (
     SELECT * 
     FROM {{ source('sql_server_dbo', 'order_items') }}
-
-{% if is_incremental() %}
-
-	  WHERE date_load_UTC > (SELECT MAX(date_load_UTC) FROM {{ this }} )
-
-{% endif %}
     ),
 
 renamed_casted AS (
@@ -33,4 +27,10 @@ renamed_casted AS (
     )
 
 SELECT * FROM renamed_casted
+
+{% if is_incremental() %}
+
+	  WHERE date_load_UTC > (SELECT MAX(date_load_UTC) FROM {{ this }} )
+
+{% endif %}
 
