@@ -29,8 +29,8 @@ sales_per_month AS(
     ON date(o.order_created_at_UTC) = t.date_id
     LEFT JOIN product_info p
     ON o.product_id = p.product_id
-    GROUP BY product_id, product_name, month, year
-    ORDER BY year, month, product_name
+    GROUP BY o.product_id, p.product_name, month, year
+    ORDER BY year, month, p.product_name
 )
 
 SELECT * FROM sales_per_month
