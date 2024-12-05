@@ -16,7 +16,7 @@ WITH date_spine AS(
     }} 
 ),
 
-time_dimension AS(
+stg_time AS(
     SELECT
         date_day as date_id,
         YEAR(date_day) AS year,
@@ -40,4 +40,4 @@ time_dimension AS(
     FROM date_spine
 )
 
-SELECT * from time_dimension
+SELECT * from stg_time

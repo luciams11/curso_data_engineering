@@ -1,3 +1,11 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='event_id',
+        on_schema_change='fail'
+    )
+}}
+
 WITH src_events AS (
     SELECT * 
     FROM {{ source('sql_server_dbo', 'events') }}
@@ -22,3 +30,9 @@ renamed_casted AS (
     )
 
 SELECT * FROM renamed_casted
+
+{% if is_incremental() %}
+
+	  WHERE date_load_UTC > (SELECT MAX(date_load_UTC) FROM {{ this }} )
+
+{% endif %}

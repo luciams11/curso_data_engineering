@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: agg_shipments_on_time
+    description: "Modelo agregado que resume el rendimiento de los envíos por servicio de mensajería, incluyendo estadísticas sobre los envíos a tiempo, retrasados, y el promedio de días de retraso."
+    columns:
+      - name: shipping_service
+        data_type: varchar
+        description: "Servicio de mensajería utilizado para los envíos."
+
+      - name: total_shipments
+        data_type: number
+        description: "Número total de envíos registrados para cada servicio de mensajería."
+
+      - name: shipments_on_time
+        data_type: number
+        description: "Número de envíos entregados a tiempo."
+
+      - name: shipments_delayed
+        data_type: number
+        description: "Número de envíos retrasados."
+
+      - name: pct_on_time
+        data_type: number
+        description: "Porcentaje de envíos entregados a tiempo respecto al total de envíos."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0 
+              max_value: 100
+
+      - name: pct_delayed
+        data_type: number
+        description: "Porcentaje de envíos retrasados respecto al total de envíos."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0 
+              max_value: 100
+
+      - name: avg_days_delayed
+        data_type: number
+        description: "Promedio de días de retraso en las entregas."
+
+      - name: max_days_delayed
+        data_type: number
+        description: "Número máximo de días de retraso en las entregas."
+
+      - name: min_days_delayed
+        data_type: number
+        description: "Número mínimo de días de retraso en las entregas."
+
+      - name: total_days_delayed
+        data_type: number
+        description: "Número total de días de retraso acumulados por los envíos retrasados."

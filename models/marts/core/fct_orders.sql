@@ -1,15 +1,14 @@
 {{
     config(
         materialized='incremental',
-        unique_key='order_item_id',
+        unique_key= ['order_item_id'],
         on_schema_change='fail'
     )
 }}
 
 with stg_orders AS(
     SELECT *
-    FROM {{ref("stg_sql_server_dbo_orders")}}
-
+    FROM {{ref('stg_sql_server_dbo_orders')}}
 ),
 
 stg_order_items AS(
@@ -25,8 +24,6 @@ fct_orders AS(
         o.address_id,
         o.promo_id,
         o.order_created_at_UTC,
-        --o.order_cost_usd,
-        --o.order_total_usd,
         o.date_load_UTC,
  
         -- Información de envío
@@ -48,6 +45,6 @@ SELECT * FROM fct_orders
 
 {% if is_incremental() %}
 
-	  WHERE date_load_UTC > (SELECT MAX(date_load_UTC) FROM {{ this }})
+	WHERE date_load_UTC > (SELECT MAX(date_load_UTC) FROM {{ this }})
 
 {% endif %}

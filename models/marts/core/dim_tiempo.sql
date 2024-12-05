@@ -1,6 +1,6 @@
 with stg_dim_tiempo AS(
     SELECT * 
-    FROM {{ref("stg_fecha")}}
+    FROM {{ ref('stg_time') }}
 ),
 
 dim_tiempo AS(

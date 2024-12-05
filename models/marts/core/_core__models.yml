@@ -2,277 +2,314 @@ version: 2
 
 models:
   - name: dim_addresses
-    description: ""
+    description: "Dimensión de direcciones, asociadas a usuarios o envíos"
     columns:
       - name: address_id
         data_type: varchar
-        description: ""
+        description: "Identificador único de la dirección"
+        tests:
+          - unique
+          - not_null
 
       - name: address
         data_type: varchar
-        description: ""
+        description: "Número y nombre de la vía"
 
       - name: state
         data_type: varchar
-        description: ""
+        description: "Estado al que pertenece la dirección"
+        tests:
+          - not_null
 
       - name: country
         data_type: varchar
-        description: ""
+        description: "País al que pertenece la dirección"
+        tests:
+          - not_null
 
       - name: zipcode
         data_type: number
-        description: ""
+        description: "Código postal asociado a la dirección"
 
   - name: dim_products
-    description: ""
+    description: "Dimensión de producto"
     columns:
       - name: product_id
         data_type: varchar
-        description: ""
+        description: "Identificador único del producto"
+        tests:
+          - unique
+          - not_null
 
       - name: product_price_usd
         data_type: number
-        description: ""
+        description: "Precio del producto en dólares estadounidenses (USD)"
+        tests:
+          - positive_values
 
       - name: product_name
         data_type: varchar
-        description: ""
+        description: "Nombre del producto"
 
       - name: origin_country
         data_type: varchar
-        description: ""
+        description: "País de origen del producto"
 
       - name: stock
         data_type: number
-        description: ""
+        description: "Cantidad de productos disponibles en el inventario"
+        tests:
+          - positive_values
 
   - name: dim_promos
-    description: ""
+    description: "Dimensión para las promociones aplicables en la tienda"
     columns:
       - name: promo_id
         data_type: varchar
-        description: ""
+        description: "Identificador único de la promoción"
+        tests:
+          - unique
+          - not_null
 
       - name: promo_name
         data_type: varchar
-        description: ""
+        description: "Nombre de la promoción"
 
       - name: discount_usd
         data_type: number
-        description: ""
+        description: "Descuento en dólares estadounidenses (USD) correspondiente a la promoción"
 
       - name: promo_status
         data_type: varchar
-        description: ""
+        description: "Indica si la promoción está activa"
+        tests:
+          - accepted_values:
+              values: ['active', 'inactive']
 
   - name: dim_tiempo
-    description: ""
+    description: "Dimensión de tiempo con atributos útiles para análisis temporal."
+
     columns:
       - name: date_id
-        data_type: timestamp_ntz
-        description: ""
-
+        description: "Identificador único de la fecha."
       - name: year
-        data_type: number
-        description: ""
-
+        description: "Año de la fecha."
       - name: month
-        data_type: number
-        description: ""
-
+        description: "Mes de la fecha."
       - name: day
-        data_type: number
-        description: ""
-
+        description: "Día del mes."
       - name: week_of_year
-        data_type: number
-        description: ""
-
+        description: "Semana del año en la que se encuentra la fecha."
       - name: quarter
-        data_type: number
-        description: ""
-
+        description: "Trimestre en el que se encuentra la fecha."
       - name: day_of_week
-        data_type: number
-        description: ""
-
+        description: "Día de la semana (número)."
       - name: is_weekend
-        data_type: varchar
-        description: ""
-
+        description: "Indica si la fecha cae en un fin de semana ('Weekend') o día laborable ('Weekday')."
       - name: month_name
-        data_type: varchar
-        description: ""
-
+        description: "Nombre del mes."
       - name: day_name
-        data_type: varchar
-        description: ""
-
+        description: "Nombre del día de la semana."
       - name: quarter_name
-        data_type: varchar
-        description: ""
+        description: "Nombre del trimestre (Q1, Q2, Q3, Q4)."
 
   - name: dim_users
-    description: ""
+    description: "Dimensión de usuarios registrados en la página web"
+    tests:
+      - checking_dates:
+          date1: 'updated_at_utc'
+          date2: 'created_at_utc'
     columns:
       - name: user_id
         data_type: varchar
-        description: ""
+        description: "Identificador único del usuario"
+        tests:
+          - unique
+          - not_null
 
       - name: first_name
         data_type: varchar
-        description: ""
+        description: "Nombre del usuario"
 
       - name: last_name
         data_type: varchar
-        description: ""
+        description: "Apellido del usuario"
 
       - name: address_id
         data_type: varchar
-        description: ""
+        description: "Identificador de la dirección principal del usuario"
+        tests:
+          - relationships:
+              field: address_id
+              to: ref('stg_sql_server_dbo_addresses')
 
       - name: phone_number
         data_type: number
-        description: ""
+        description: "Número de teléfono del usuario"
 
       - name: email
         data_type: varchar
-        description: ""
+        description: "Correo electrónico del usuario"
+        tests:
+          - not_null
+          - unique
 
       - name: created_at_utc
         data_type: timestamp_tz
-        description: ""
+        description: "Fecha y hora de registro del usuario en UTC"
 
       - name: updated_at_utc
         data_type: timestamp_tz
-        description: ""
+        description: "Fecha y hora de la última actualización del usuario en UTC"
 
   - name: fct_budget
-    description: ""
+    description: "Tabla de hechos que recoge el presupuesto asociado a un producto un mes determinado"
     columns:
       - name: budget_id
         data_type: varchar
-        description: ""
+        description: "Identificador único del presupuesto generado a partir del identificador del producto y la fecha"
+        tests:
+          - unique
+          - not_null
 
       - name: month
         data_type: date
-        description: ""
+        description: "Fecha del presupuesto"
+        tests:
+          - not_null
 
       - name: product_id
         data_type: varchar
-        description: ""
+        description: "Identificador del producto al que corresponde el presupuesto"
+        tests:
+          - relationships:
+              to: ref('stg_sql_server_dbo_products')
+              field: product_id
 
       - name: estimated_quantity
         data_type: number
-        description: ""
-
+        description: "Cantidad presupuestada a un determinado producto en un mes concreto"
+        
       - name: estimated_profit_usd
         data_type: number
-        description: ""
+        description: "Beneficio que se espera obtener según la cantidad presupuestada a un determinado producto en un mes concreto"
+        tests:
+          - positive_values
 
   - name: fct_events
-    description: ""
+    description: "Tabla de hechos que recoge eventos generados en la página web"
     columns:
       - name: event_id
         data_type: varchar
-        description: ""
+        description: "Identificador único del evento"
+        tests:
+          - unique
+          - not_null
 
       - name: page_url
         data_type: varchar
-        description: ""
+        description: "URL donde se ha producido el evento"
 
       - name: event_type
         data_type: varchar
-        description: ""
+        description: "Tipo de evento registrado en la página web"
+        tests:
+          - accepted_values:
+              values: ['add_to_cart', 'checkout', 'package_shipped', 'page_view']
 
       - name: user_id
         data_type: varchar
-        description: ""
+        description: "Identificador del usuario que ha generado el evento"
+        tests:
+          - not_null
+          - relationships:
+              field: user_id
+              to: ref('stg_sql_server_dbo_users')
 
       - name: product_id
         data_type: varchar
-        description: ""
+        description: "Identificador del producto involucrado en el evento. Puede ser nulo"
 
       - name: session_id
         data_type: varchar
-        description: ""
+        description: "Identificador de la sesión donde se generó el evento"
 
       - name: created_at_utc
         data_type: timestamp_tz
-        description: ""
+        description: "Fecha y hora en que ocurrió el evento (UTC)"
 
       - name: order_id
         data_type: varchar
-        description: ""
+        description: "Identificador del pedido asociado al evento, si aplica"
+
 
   - name: fct_orders
-    description: ""
+    description: "Tabla de hechos que recoge información de pedidos, productos y detalles de envío."
     columns:
-      - name: order_item_id
-        data_type: varchar
-        description: ""
+    - name: order_item_id
+      data_type: varchar
+      description: "Identificador único del producto asociado al pedido, generado a partir del identificador del producto y del pedido"
 
-      - name: order_id
-        data_type: varchar
-        description: ""
+    - name: order_id
+      data_type: varchar
+      description: "Identificador único del pedido"
 
-      - name: user_id
-        data_type: varchar
-        description: ""
+    - name: user_id
+      data_type: varchar
+      description: "Identificador del usuario que realizó el pedido"
 
-      - name: address_id
-        data_type: varchar
-        description: ""
+    - name: address_id
+      data_type: varchar
+      description: "Identificador de la dirección asociada al pedido"
 
-      - name: promo_id
-        data_type: varchar
-        description: ""
+    - name: promo_id
+      data_type: varchar
+      description: "Identificador de la promoción aplicada al pedido. Puede ser nulo si no se aplicó ninguna promoción"
 
-      - name: order_created_at_utc
-        data_type: timestamp_tz
-        description: ""
+    - name: order_created_at_utc
+      data_type: timestamp_tz
+      description: "Fecha y hora de creación del pedido en formato UTC"
 
-      - name: date_load_utc
-        data_type: timestamp_tz
-        description: ""
+    - name: date_load_utc
+      data_type: timestamp_tz
+      description: "Fecha y hora en que el registro fue cargado desde Fivetran en formato UTC"
 
-      - name: shipping_service
-        data_type: varchar
-        description: ""
+    - name: shipping_service
+      data_type: varchar
+      description: "Nombre del servicio de mensajería utilizado para la entrega del pedido"
 
-      - name: shipping_cost_per_product_usd
-        data_type: number
-        description: ""
+    - name: shipping_cost_per_product_usd
+      data_type: number
+      description: "Coste de envío por producto en dólares estadounidenses (USD). Calculado dividiendo el coste total de envío entre la cantidad total de productos en el pedido."
 
-      - name: estimated_delivery_at_utc
-        data_type: timestamp_tz
-        description: ""
+    - name: estimated_delivery_at_utc
+      data_type: timestamp_tz
+      description: "Fecha y hora estimada de entrega del pedido en formato UTC. Puede ser nulo si aún no se ha programado el envío"
 
-      - name: delivered_at_utc
-        data_type: timestamp_tz
-        description: ""
+    - name: delivered_at_utc
+      data_type: timestamp_tz
+      description: "Fecha y hora en que el pedido fue entregado en formato UTC. Puede ser nulo si el pedido aún no ha sido entregado"
 
-      - name: tracking_id
-        data_type: varchar
-        description: ""
+    - name: tracking_id
+      data_type: varchar
+      description: "Identificador de seguimiento proporcionado por el servicio de mensajería"
 
-      - name: order_status
-        data_type: varchar
-        description: ""
+    - name: order_status
+      data_type: varchar
+      description: "Estado actual del pedido, como 'delivered', 'shipped', o 'preparing'"
 
-      - name: product_id
-        data_type: varchar
-        description: ""
+    - name: product_id
+      data_type: varchar
+      description: "Identificador único del producto incluido en el pedido"
 
-      - name: product_name
-        data_type: varchar
-        description: ""
+    - name: product_name
+      data_type: varchar
+      description: "Nombre del producto incluido en el pedido"
 
-      - name: quantity
-        data_type: number
-        description: ""
+    - name: quantity
+      data_type: number
+      description: "Cantidad del producto en el pedido"
 
-      - name: product_price_usd
-        data_type: number
-        description: ""
+    - name: product_price_usd
+      data_type: number
+      description: "Precio unitario del producto en dólares estadounidenses (USD)"

@@ -1,6 +1,6 @@
 WITH users_info AS (
     SELECT * 
-    FROM {{ ref("int_user_info")}}
+    FROM {{ ref("int_user_add_joined")}}
 ),
 
 fct_orders AS (
