@@ -3,7 +3,7 @@
         materialized='table', 
         sort='date_day',
         dist='date_day',
-        pre_hook="alter session set timezone = 'Europe/Madrid'; alter session set week_start = 7;" 
+        pre_hook="alter session set week_start = 7;" 
         ) }}
 
 
@@ -16,7 +16,7 @@ WITH date_spine AS(
     }} 
 ),
 
-time_dimension AS(
+stg_time AS(
     SELECT
         date_day as date_id,
         YEAR(date_day) AS year,
@@ -40,4 +40,4 @@ time_dimension AS(
     FROM date_spine
 )
 
-SELECT * from time_dimension
+SELECT * from stg_time

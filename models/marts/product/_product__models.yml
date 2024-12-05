@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: agg_user_sessions
+    description: "Modelo agregado que resume las sesiones de los usuarios, incluyendo eventos clave como vistas de página, adiciones al carrito y compras completadas."
+    columns:
+      - name: session_id
+        data_type: varchar
+        description: "Identificador único de la sesión del usuario."
+
+      - name: user_id
+        data_type: varchar
+        description: "Identificador único del usuario que inició la sesión."
+        tests:
+          - not_null
+
+      - name: first_name
+        data_type: varchar
+        description: "Nombre del usuario asociado con la sesión."
+
+      - name: email
+        data_type: varchar
+        description: "Dirección de correo electrónico del usuario asociado con la sesión."
+
+      - name: first_event_time_utc
+        data_type: timestamp_tz
+        description: "Fecha y hora del primer evento en la sesión, registrada en formato UTC."
+
+      - name: last_event_time_utc
+        data_type: timestamp_tz
+        description: "Fecha y hora del último evento en la sesión, registrada en formato UTC."
+
+      - name: session_length_minutes
+        data_type: number
+        description: "Duración total de la sesión en minutos, calculada como la diferencia entre `first_event_time_utc` y `last_event_time_utc`."
+        tests:
+          - positive_values
+
+      - name: page_view
+        data_type: number
+        description: "Número de páginas vistas por el usuario durante la sesión."
+        tests:
+          - positive_values
+
+      - name: add_to_cart
+        data_type: number
+        description: "Número de veces que el usuario agregó un producto al carrito durante la sesión."
+        tests:
+          - positive_values
+
+      - name: checkout
+        data_type: number
+        description: "Número de veces que el usuario completó el proceso de pago o checkout durante la sesión."
+        tests:
+          - positive_values
+
+      - name: package_shipped
+        data_type: number
+        description: "Número de veces que el usuario recibió la confirmación de envío del paquete durante la sesión."
+        tests:
+          - positive_values

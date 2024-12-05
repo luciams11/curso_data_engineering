@@ -2,159 +2,373 @@ version: 2
 
 models:
   - name: stg_sql_server_dbo_addresses
-    description: ""
+    description: "Modelo staging para las direcciones asociadas a usuarios o envíos"
     columns:
       - name: address_id
         data_type: varchar
-        description: ""
+        description: "Identificador único de la dirección"
         tests:
           - unique
+          - not_null
+
+      - name: address
+        data_type: varchar
+        description: "Número y nombre de la vía"
+
+      - name: state
+        data_type: varchar
+        description: "Estado al que pertenece la dirección"
+        tests:
+          - not_null
+
+      - name: country
+        data_type: varchar
+        description: "País al que pertenece la dirección"
+        tests:
           - not_null
 
       - name: zipcode
         data_type: number
-        description: ""
+        description: "Código postal asociado a la dirección"
 
-      - name: country
-        data_type: varchar
-        description: ""
-
-      - name: address
-        data_type: varchar
-        description: ""
-
-      - name: state
-        data_type: varchar
-        description: ""
-
-      - name: _fivetran_deleted
+      - name: is_deleted
         data_type: boolean
-        description: ""
+        description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+        tests:
+          - accepted_values:
+              values: [true, false]
 
       - name: date_load_utc
         data_type: timestamp_tz
-        description: ""
-  
-  - name: stg_sql_server_dbo_products
-    description: ""
+        description: "Fecha y hora de carga desde Fivetran en UTC"
+
+  - name: stg_sql_server_dbo_events
+    description: "Modelo staging para eventos generados en la página web"
     columns:
-      - name: product_id
+      - name: event_id
         data_type: varchar
-        description: ""
+        description: "Identificador único del evento"
         tests:
           - unique
           - not_null
 
-      - name: product_price
-        data_type: number
-        description: ""
-
-      - name: product_name
+      - name: page_url
         data_type: varchar
-        description: ""
+        description: "URL donde se ha producido el evento"
 
-      - name: stock
-        data_type: number
-        description: ""
+      - name: event_type
+        data_type: varchar
+        description: "Tipo de evento registrado en la página web"
+        tests:
+          - accepted_values:
+              values: ['add_to_cart', 'checkout', 'package_shipped', 'page_view']
 
-      - name: _fivetran_deleted
+      - name: user_id
+        data_type: varchar
+        description: "Identificador del usuario que ha generado el evento"
+        tests:
+          - not_null
+          - relationships:
+              field: user_id
+              to: ref('stg_sql_server_dbo_users')
+
+      - name: product_id
+        data_type: varchar
+        description: "Identificador del producto involucrado en el evento. Puede ser nulo"
+
+      - name: session_id
+        data_type: varchar
+        description: "Identificador de la sesión donde se generó el evento"
+
+      - name: created_at_utc
+        data_type: timestamp_tz
+        description: "Fecha y hora en que ocurrió el evento (UTC)"
+
+      - name: order_id
+        data_type: varchar
+        description: "Identificador del pedido asociado al evento, si aplica"
+
+      - name: is_deleted
         data_type: boolean
-        description: ""
+        description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+        tests:
+          - accepted_values:
+              values: [true, false]
 
       - name: date_load_utc
         data_type: timestamp_tz
-        description: ""
+        description: "Fecha y hora de carga desde Fivetran en UTC"
 
+  - name: stg_sql_server_dbo_order_items
+    description: "Modelo staging para productos asociados a un pedido"
+    columns:
+      - name: order_item_id
+        data_type: varchar
+        description: "Identificador único del producto en un pedido generado a partir del identificador del producto y el del pedido"
+        tests:
+          - unique
+          - not_null
+
+      - name: order_id
+        data_type: varchar
+        description: "Identificador único del pedido asociado al producto"
+        tests:
+          - not_null
+          - relationships:
+              field: order_id
+              to: ref('stg_sql_server_dbo_orders')
+
+      - name: product_id
+        data_type: varchar
+        description: "Identificador único del producto"
+        tests:
+          - not_null
+          - relationships:
+              field: product_id
+              to: ref('stg_sql_server_dbo_products')
+
+      - name: quantity
+        data_type: number
+        description: "Cantidad del producto en el pedido"
+        tests:
+          - positive_values
+
+      - name: is_deleted
+        data_type: boolean
+        description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+        tests:
+          - accepted_values:
+              values: [true, false]
+
+      - name: date_load_utc
+        data_type: timestamp_tz
+        description: "Fecha y hora de carga desde Fivetran en UTC"
+
+  - name: stg_sql_server_dbo_orders
+    description: "Modelo staging para los pedidos realizados"
+    tests:
+      - checking_dates:
+          date1: 'estimated_delivery_at_utc'
+          date2: 'order_created_at_utc'
+    columns:
+      - name: order_id
+        data_type: varchar
+        description: "Identificador único del pedido"
+        tests:
+          - unique
+          - not_null
+
+      - name: user_id
+        data_type: varchar
+        description: "Identificador del usuario que realizó el pedido"
+        tests:
+          - not_null
+          - relationships:
+              field: user_id
+              to: ref('stg_sql_server_dbo_users')
+
+      - name: address_id
+        data_type: varchar
+        description: "Identificador de la dirección asociada al pedido"
+        tests:
+          - not_null
+          - relationships:
+              field: address_id
+              to: ref('stg_sql_server_dbo_addresses')
+
+      - name: promo_id
+        data_type: varchar
+        description: "Identificador de la promoción aplicada al pedido"
+
+      - name: order_created_at_utc
+        data_type: timestamp_tz
+        description: "Fecha y hora de creación del pedido (UTC)"
+
+      - name: order_cost_usd
+        data_type: number
+        description: "Coste del pedido sin incluir gastos de envío en dólares estadounidenses (USD)"
+        tests:
+          - positive_values
+
+      - name: order_total_usd
+        data_type: number
+        description: "Coste total del pedido incluyendo gastos de envío y el descuento en dólares estadounidenses (USD)"
+        tests:
+          - positive_values
+
+      - name: shipping_service
+        data_type: varchar
+        description: "Servicio de mensajería utilizado para el pedido"
+
+      - name: shipping_cost_usd
+        data_type: number
+        description: "Coste de envío del pedido"
+        tests:
+          - positive_values
+
+      - name: estimated_delivery_at_utc
+        data_type: timestamp_tz
+        description: "Fecha y hora estimada de entrega del pedido (UTC). Puede ser nulo si no se ha enviado aún"
+
+      - name: delivered_at_utc
+        data_type: timestamp_tz
+        description: "Fecha y hora de entrega del pedido (UTC). Puede ser nulo si no ha llegado aún"
+
+      - name: tracking_id
+        data_type: varchar
+        description: "Identificador de seguimiento del pedido"
+
+      - name: order_status
+        data_type: varchar
+        description: "Estado del pedido"
+        tests:
+          - accepted_values:
+              values: ['delivered', 'shipped', 'preparing']
+
+      - name: is_deleted
+        data_type: boolean
+        description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+        tests:
+          - accepted_values:
+              values: [true, false]
+
+      - name: date_load_utc
+        data_type: timestamp_tz
+        description: "Fecha y hora de carga desde Fivetran en UTC"
+
+  - name: stg_sql_server_dbo_products
+    description: "Modelo staging para productos disponibles en la tienda"
+    columns:
+      - name: product_id
+        data_type: varchar
+        description: "Identificador único del producto"
+        tests:
+          - unique
+          - not_null
+
+      - name: product_price_usd
+        data_type: number
+        description: "Precio del producto en dólares estadounidenses (USD)"
+        tests:
+          - positive_values
+
+      - name: product_name
+        data_type: varchar
+        description: "Nombre del producto"
+
+      - name: origin_country
+        data_type: varchar
+        description: "País de origen del producto"
+
+      - name: stock
+        data_type: number
+        description: "Cantidad de productos disponibles en el inventario"
+        tests:
+          - positive_values
+
+      - name: is_deleted
+        data_type: boolean
+        description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+        tests:
+          - accepted_values:
+              values: [true, false]
+
+      - name: date_load_utc
+        data_type: timestamp_tz
+        description: "Fecha y hora de carga desde Fivetran en UTC"
+        
   - name: stg_sql_server_dbo_promos
-    description: ""
+    description: "Modelo staging para las promociones aplicables en la tienda"
     columns:
       - name: promo_id
         data_type: varchar
-        description: ""
+        description: "Identificador único de la promoción"
         tests:
           - unique
           - not_null
 
       - name: promo_name
         data_type: varchar
-        description: ""
+        description: "Nombre de la promoción"
 
-      - name: discount_euros
+      - name: discount_usd
         data_type: number
-        description: ""
+        description: "Descuento en dólares estadounidenses (USD) correspondiente a la promoción"
 
       - name: promo_status
         data_type: varchar
-        description: ""
+        description: "Indica si la promoción está activa"
+        tests:
+          - accepted_values:
+              values: ['active', 'inactive']
 
-      - name: _fivetran_deleted
+      - name: is_deleted
         data_type: boolean
-        description: ""
+        description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+        tests:
+          - accepted_values:
+              values: [true, false]
 
       - name: date_load_utc
         data_type: timestamp_tz
-        description: ""
-  
-  - name: stg_sql_server_dbo_shipping_service
-    description: ""
-    columns:
-      - name: shipping_service_id
-        data_type: varchar
-        description: ""
-        tests:
-          - unique
-          - not_null
+        description: "Fecha y hora de carga desde Fivetran en UTC"
 
-      - name: shipping_service
-        data_type: varchar
-        description: ""
-  
   - name: stg_sql_server_dbo_users
-    description: ""
+    description: "Modelo staging para los usuarios registrados en la página web"
+    tests:
+      - checking_dates:
+          date1: 'updated_at_utc'
+          date2: 'created_at_utc'
     columns:
       - name: user_id
         data_type: varchar
-        description: ""
+        description: "Identificador único del usuario"
         tests:
           - unique
           - not_null
 
-      - name: updated_at_utc
-        data_type: timestamp_tz
-        description: ""
+      - name: first_name
+        data_type: varchar
+        description: "Nombre del usuario"
+
+      - name: last_name
+        data_type: varchar
+        description: "Apellido del usuario"
 
       - name: address_id
         data_type: varchar
-        description: ""
+        description: "Identificador de la dirección principal del usuario"
         tests:
           - relationships:
               field: address_id
               to: ref('stg_sql_server_dbo_addresses')
 
-      - name: last_name
-        data_type: varchar
-        description: ""
-
-      - name: created_at_utc
-        data_type: timestamp_tz
-        description: ""
-
       - name: phone_number
         data_type: number
-        description: ""
-
-      - name: first_name
-        data_type: varchar
-        description: ""
+        description: "Número de teléfono del usuario"
 
       - name: email
         data_type: varchar
-        description: ""
+        description: "Correo electrónico del usuario"
+        tests:
+          - not_null
+          - unique
 
-      - name: _fivetran_deleted
+      - name: created_at_utc
+        data_type: timestamp_tz
+        description: "Fecha y hora de registro del usuario en UTC"
+
+      - name: updated_at_utc
+        data_type: timestamp_tz
+        description: "Fecha y hora de la última actualización del usuario en UTC"
+
+      - name: is_deleted
         data_type: boolean
-        description: ""
+        description: "Indica si el registro ha sido eliminado al ser cargado desde Fivetran"
+        tests:
+          - accepted_values:
+              values: [true, false]
 
       - name: date_load_utc
         data_type: timestamp_tz
-        description: ""
+        description: "Fecha y hora de carga desde Fivetran en UTC"

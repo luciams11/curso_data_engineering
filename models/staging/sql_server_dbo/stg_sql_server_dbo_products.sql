@@ -1,17 +1,25 @@
-WITH src_products AS (
+WITH base_products AS (
     SELECT * 
-    FROM {{ source('sql_server_dbo', 'products') }}
+    FROM {{ ref('base_sql_server_dbo_products') }}
     ),
 
-renamed_casted AS (
+base_products_origins AS(
+    SELECT *
+    FROM {{ ref('base_seed_files_products_origins') }}
+),
+
+stg_products AS (
     SELECT
-        product_id,
-        price::decimal(10,2) as product_price,
-        name as product_name,
-        inventory as stock,
-        _fivetran_deleted,
-        convert_timezone('UTC',_fivetran_synced) AS date_load_UTC
-    FROM src_products
+        p.product_id,
+        p.product_price_usd,
+        p.product_name,
+        coalesce(o.origin_country, 'Unknown') as origin_country,
+        p.stock,
+        p.is_deleted,
+        p.date_load_UTC
+    FROM base_products p
+    LEFT JOIN base_products_origins o 
+    ON p.product_name = o.product_name
     )
 
-SELECT * FROM renamed_casted
+SELECT * FROM stg_products

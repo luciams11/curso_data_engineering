@@ -1,0 +1,144 @@
+version: 2
+
+models:
+  - name: agg_user_location
+    description: "Modelo agregado que proporciona estadísticas de usuarios por ubicación (estado y país)."
+    columns:
+      - name: state
+        data_type: varchar
+        description: "Estado del usuario."
+      
+      - name: country
+        data_type: varchar
+        description: "País del usuario."
+        
+      - name: total_users
+        data_type: number
+        description: "Número total de usuarios por estado y país."
+        tests:
+          - not_null
+
+      - name: unique_states
+        data_type: number
+        description: "Número de estados distintos en cada país."
+        tests:
+          - not_null
+
+      - name: unique_countries
+        data_type: number
+        description: "Número de países distintos (se calcula a nivel de estado)."
+        tests:
+          - not_null
+
+      - name: unique_zipcodes
+        data_type: number
+        description: "Número de códigos postales distintos por estado y país."
+        tests:
+          - not_null
+
+  - name: agg_user_orders
+    description: "Modelo que resume la información de los usuarios y sus pedidos, incluyendo costos, cantidades, y descuentos."
+    columns:
+      - name: user_id
+        data_type: varchar
+        description: "Identificador único del usuario."
+        tests:
+          - not_null
+          - unique
+
+      - name: first_name
+        data_type: varchar
+        description: "Primer nombre del usuario."
+        tests:
+          - not_null
+
+      - name: last_name
+        data_type: varchar
+        description: "Apellido del usuario."
+        tests:
+          - not_null
+
+      - name: email
+        data_type: varchar
+        description: "Correo electrónico del usuario."
+        tests:
+          - not_null
+          - unique
+
+      - name: phone_number
+        data_type: number
+        description: "Número de teléfono del usuario."
+        tests:
+          - not_null
+
+      - name: created_at_UTC
+        data_type: timestamp_tz
+        description: "Fecha y hora en que el usuario fue creado en formato UTC."
+        tests:
+          - not_null
+
+      - name: updated_at_UTC
+        data_type: timestamp_tz
+        description: "Fecha y hora de la última actualización del usuario en formato UTC."
+        tests:
+          - not_null
+
+      - name: address
+        data_type: varchar
+        description: "Dirección del usuario."
+        tests:
+          - not_null
+
+      - name: zipcode
+        data_type: number
+        description: "Código postal de la dirección del usuario."
+        tests:
+          - not_null
+
+      - name: state
+        data_type: varchar
+        description: "Estado o provincia de la dirección del usuario."
+        tests:
+          - not_null
+
+      - name: country
+        data_type: varchar
+        description: "País de la dirección del usuario."
+        tests:
+          - not_null
+
+      - name: total_number_orders
+        data_type: number
+        description: "Número total de pedidos realizados por el usuario."
+        tests:
+          - positive_values
+
+      - name: total_order_cost_usd
+        data_type: number
+        description: "Costo total de los pedidos realizados por el usuario, incluyendo productos, costos de envío y descuentos en dólares estadounidenses."
+        tests:
+          - positive_values
+
+      - name: total_shipping_cost_usd
+        data_type: number
+        description: "Costo total del envío de los pedidos del usuario en dólares estadounidenses."
+        tests:
+          - positive_values
+
+      - name: total_discount_usd
+        data_type: number
+        description: "Descuento total aplicado en los pedidos del usuario en dólares estadounidenses."
+        tests:
+          - positive_values
+
+      - name: total_quantity_product
+        data_type: number
+        description: "Cantidad total de productos comprados por el usuario."
+        tests:
+          - positive_values
+
+      - name: total_dif_product
+        data_type: number
+        description: "Número total de productos distintos comprados por el usuario."
+        tests:
+          - positive_values

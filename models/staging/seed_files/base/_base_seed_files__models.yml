@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: base_seed_files_products_origins
+    description: "Modelo base para conocer el país de origen de los productos disponibles en la tienda"
+    columns:
+      - name: product_name
+        data_type: varchar
+        description: "Nombre del producto"
+
+      - name: origin_country
+        data_type: varchar
+        description: "País de origen del producto"

@@ -4,7 +4,15 @@ with stg_users AS(
 ),
 
 dim_users AS(
-    SELECT *
+    SELECT 
+        user_id,
+        first_name,
+        last_name,
+        address_id,
+        phone_number,
+        email,
+        created_at_UTC,
+        updated_at_UTC
     FROM stg_users
 )
 

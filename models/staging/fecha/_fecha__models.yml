@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_time
+    description: "Modelo para generar una tabla de dimensión de tiempo con atributos útiles para análisis temporal."
+
+    columns:
+      - name: date_id
+        description: "Identificador único de la fecha."
+      - name: year
+        description: "Año de la fecha."
+      - name: month
+        description: "Mes de la fecha."
+      - name: day
+        description: "Día del mes."
+      - name: week_of_year
+        description: "Semana del año en la que se encuentra la fecha."
+      - name: quarter
+        description: "Trimestre en el que se encuentra la fecha."
+      - name: day_of_week
+        description: "Día de la semana (número)."
+      - name: is_weekend
+        description: "Indica si la fecha cae en un fin de semana ('Weekend') o día laborable ('Weekday')."
+      - name: month_name
+        description: "Nombre del mes."
+      - name: day_name
+        description: "Nombre del día de la semana."
+      - name: quarter_name
+        description: "Nombre del trimestre (Q1, Q2, Q3, Q4)."

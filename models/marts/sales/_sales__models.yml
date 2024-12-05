@@ -1,0 +1,72 @@
+version: 2
+
+models:
+  - name: agg_sales_per_month
+    description: "Modelo agregado que resume las ventas por producto, mes y año, con información sobre la cantidad total de productos vendidos y las ganancias reales en USD."
+    columns:
+      - name: product_id
+        data_type: varchar
+        description: "Identificador único del producto."
+
+      - name: product_name
+        data_type: varchar
+        description: "Nombre del producto."
+
+      - name: total_quantity_product
+        data_type: number
+        description: "Cantidad total de unidades del producto vendidas durante el mes."
+
+      - name: real_profit_usd
+        data_type: number
+        description: "Ganancia real obtenida por las ventas del producto en dólares estadounidenses (USD)."
+
+      - name: month
+        data_type: number
+        description: "Mes del año en que se registraron las ventas."
+
+      - name: year
+        data_type: number
+        description: "Año en que se registraron las ventas."
+
+  - name: budget_vs_sales
+    description: "Modelo que compara las ventas reales con las estimaciones del presupuesto, incluyendo diferencias en la cantidad de productos vendidos y las ganancias."
+    columns:
+      - name: product_id
+        data_type: varchar
+        description: "Identificador único del producto."
+
+      - name: month
+        data_type: varchar
+        description: "Mes de las ventas y el presupuesto."
+
+      - name: year
+        data_type: number
+        description: "Año de las ventas y el presupuesto."
+
+      - name: estimated_quantity
+        data_type: number
+        description: "Cantidad estimada de productos que se esperaban vender según el presupuesto."
+
+      - name: estimated_profit_usd
+        data_type: number
+        description: "Ganancia estimada en dólares estadounidenses (USD) según el presupuesto."
+
+      - name: total_quantity_product_sold
+        data_type: number
+        description: "Cantidad total de productos vendidos durante el mes, de acuerdo con las ventas reales."
+
+      - name: real_profit_usd
+        data_type: number
+        description: "Ganancia real obtenida por las ventas del producto en dólares estadounidenses (USD)."
+
+      - name: budget_achieved
+        data_type: boolean
+        description: "Indica si se cumplió o no el presupuesto de ventas (true si se alcanzó el presupuesto, false si no)."
+
+      - name: quantity_diff
+        data_type: number
+        description: "Diferencia entre la cantidad de productos estimados en el presupuesto y la cantidad real vendida."
+
+      - name: profit_diff
+        data_type: number
+        description: "Diferencia entre la ganancia estimada en el presupuesto y la ganancia real obtenida."
