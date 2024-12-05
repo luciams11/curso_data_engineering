@@ -5,19 +5,18 @@
       target_schema='snapshots',
       unique_key='product_id',
       strategy='check',
-      check_cols=['product_id', 'product_price_usd', 'stock'],
+      check_cols=['product_id', 'price', 'inventory'],
       invalidate_hard_deletes = true
     )
 }}
 
 select 
     product_id,
-    product_price_usd,
-    product_name,
-    origin_country,
-    stock,
-    is_deleted,
-    date_load_UTC
+    price,
+    name,
+    inventory,
+    _fivetran_deleted,
+    _fivetran_synced
 from {{ source('sql_server_dbo', 'products') }}
 
 {% endsnapshot %}
